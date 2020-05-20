@@ -42,11 +42,11 @@ public class Utils {
     public static String getBanner(){
     
         String hello =
-                "==	" + BurpExtender.extensionName +"-"+BurpExtender.version+ "\n"
-              + "==	\u63d2\u4ef6\u52a0\u8f7d\u6210\u529f\n"
-              + "==	\u8bf7\u5728 "+BurpExtender.extensionName+" \u4e2d\u8bbe\u7f6e\u004a\u0053\u6587\u4ef6\u8def\u5f84\u4ee5\u53ca\u8981\u8c03\u7528\u7684\u65b9\u6cd5\u540d \n"
-              + "==	anthor: tinkmore\n"
-              + "==	email: 990448338@qq.com\n";
+                  "==	" + BurpExtender.extensionName +"-"+BurpExtender.version+ "\n"
+                + "==	hello\n"
+                + "==	anthor: thinkoaa\n"
+                + "==	email: 990448338@qq.com\n"
+        		+ "==	github: https://github.com/thinkoaa/JSRainbow\n";
         
         
         return hello;
