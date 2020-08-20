@@ -1,41 +1,35 @@
 package burp;
 
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 
 public class Utils {
     private static Invocable  invocable;
     public static String functionName;
     
-     public  static  void initJsEngine(String javaScriptPath){
+     public  static  void initJsEngine(String javaScriptPath) throws Exception{
     	// 获取JS引擎
- 		ScriptEngine se = new ScriptEngineManager().getEngineByName("javascript");
- 		try {
+ 		ScriptEngine se = new ScriptEngineManager().getEngineByName("nashorn");
+ 	 
  		FileReader fr = new FileReader(javaScriptPath);
  		se.eval(fr);
  		fr.close();
  		invocable= (Invocable) se;
- 		BurpExtender.stdout.println("**The js file was imported successfully**");
- 		}catch (Exception e) {
- 			BurpExtender.stderr.println(BurpExtender.extensionName+":JS file has syntax error, please test successfully in the local first, in addition, replace [let] with [var]");
- 			BurpExtender.stderr.println(e.getMessage());
- 		}
+ 	 
      }
     
 
-	public static String sendPayload(String payload) {
-		try {
-			return  (String) invocable.invokeFunction(functionName, payload);
-		}catch (Exception e) {
-			BurpExtender.stderr.println(BurpExtender.extensionName+":Syntax error occurred when calling js method to handle payload. Please test the js method in the local file");
- 			BurpExtender.stderr.println(e.getMessage());
- 			return e.getMessage();
-		} 
+	public static String sendPayload(String payload) throws NoSuchMethodException, ScriptException {
+		 
+			return    invocable.invokeFunction(functionName, payload).toString();
+	 
 		  
 	}
 

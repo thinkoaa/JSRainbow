@@ -3,11 +3,11 @@ package burp;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 public class Menu implements IContextMenuFactory{
     private int[] selectRange;
@@ -34,8 +34,9 @@ public class Menu implements IContextMenuFactory{
                     sbReq.replace(selectRange[0],selectRange[1],strEncrypt);
                     byte[] newRequst = BurpExtender.helpers.stringToBytes(sbReq.toString());
                     reqRsp.setRequest(newRequst);
-                } catch (UnsupportedEncodingException er) {
-                    BurpExtender.stderr.println(er.getMessage());
+                } catch (Exception er) {
+
+   JOptionPane.showMessageDialog(BurpExtender.gui.getComponet(), er.getMessage()," 请检查以下异常信息", 1);
                 }
             }
         });

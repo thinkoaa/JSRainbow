@@ -11,6 +11,7 @@ import java.awt.event.FocusListener;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -26,6 +27,7 @@ public class GUI {
 
 	public GUI() {
 
+		
 		contentPane = new JPanel();
 		lbJavaScriptPath = new JLabel("JS文件的绝对路径：");
 		lbJavaScriptPath.setFont(lbJavaScriptPath.getFont().deriveFont(20.0f));
@@ -79,7 +81,12 @@ public class GUI {
 				if (returnVal == JFileChooser.APPROVE_OPTION) { // 如果符合文件类型
 					String filepath = chooser.getSelectedFile().getAbsolutePath(); // 获取绝对路径
 					javaScriptPath.setText(filepath);
-                    Utils.initJsEngine(filepath);
+                    
+					try {
+						Utils.initJsEngine(filepath);
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(getComponet(), e1.getMessage()," 请检查以下异常信息", 1);
+					}
 				}
 			}
 		});
@@ -87,7 +94,11 @@ public class GUI {
 		refresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { // 按钮点击事件
 				 if(javaScriptPath.getText()!=null) {
-					 Utils.initJsEngine(javaScriptPath.getText());
+					 try {
+						Utils.initJsEngine(javaScriptPath.getText());
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(getComponet(), e1.getMessage()," 请检查以下异常信息", 1);
+					}
 				 }
 			}
 		});

@@ -3,6 +3,7 @@ package burp;
 import java.awt.Component;
 import java.io.PrintWriter;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class BurpExtender implements IBurpExtender,IIntruderPayloadProcessor,ITab {
@@ -47,7 +48,12 @@ public class BurpExtender implements IBurpExtender,IIntruderPayloadProcessor,ITa
 	@Override
 	public byte[] processPayload(byte[] currentPayload, byte[] originalPayload, byte[] baseValue) {
 		String payload = new String(currentPayload);
-		String newPayload = Utils.sendPayload(payload);
+		String newPayload="";
+		try {
+			newPayload = Utils.sendPayload(payload);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this.getUiComponent(),e.getMessage()," 请检查以下异常信息", 1);
+		}  
 		return helpers.stringToBytes(newPayload);
 	}
 
@@ -63,6 +69,6 @@ public class BurpExtender implements IBurpExtender,IIntruderPayloadProcessor,ITa
 	}
 	
 	public static void main(String args[]) {
-		System.out.println("hello");
+		System.out.println("++hello++");
 	}
 }
