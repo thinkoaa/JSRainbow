@@ -3,3 +3,7 @@ META-INF/
 fat_staging/
 *.class
 JSRainbow.jar
+JSRainbow.jar
+.classpath
+.project
+.settings/
