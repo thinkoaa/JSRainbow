@@ -6,69 +6,61 @@ import java.io.PrintWriter;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-public class BurpExtender implements IBurpExtender,IIntruderPayloadProcessor,ITab {
+public class BurpExtender implements IBurpExtender, IIntruderPayloadProcessor, ITab {
     public final static String extensionName = "JS Rainbow";
-	public final static String version ="1.0";
-	public static IBurpExtenderCallbacks callbacks;
-	public static IExtensionHelpers helpers;
-	public static PrintWriter stdout;
-	public static PrintWriter stderr;
-	public static GUI gui;
-	
-	@SuppressWarnings("static-access")
-	@Override
-	public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
-		this.callbacks = callbacks;
-		this.helpers = callbacks.getHelpers();
-		this.stdout = new PrintWriter(callbacks.getStdout(),true);
-		this.stderr = new PrintWriter(callbacks.getStderr(),true);
-		
-		callbacks.setExtensionName(extensionName+" "+version);
-		callbacks.registerContextMenuFactory(new Menu());
-		callbacks.registerIntruderPayloadProcessor(this);
+    public final static String version = "2.0";
+    public static IBurpExtenderCallbacks callbacks;
+    public static IExtensionHelpers helpers;
+    public static PrintWriter stdout;
+    public static PrintWriter stderr;
+    public static GUI gui;
 
-		BurpExtender.this.gui = new GUI();
-		SwingUtilities.invokeLater(new Runnable()
-	      {
-	        public void run()
-	        {
-	          BurpExtender.this.callbacks.addSuiteTab(BurpExtender.this);
-	          stdout.println(Utils.getBanner());
-	        }
-	      });
-		
-	}
-	
-	 
-	@Override
-	public String getProcessorName() {
-		return extensionName;
-	}
+    @SuppressWarnings("static-access")
+    @Override
+    public void registerExtenderCallbacks(IBurpExtenderCallbacks callbacks) {
+        this.callbacks = callbacks;
+        this.helpers = callbacks.getHelpers();
+        this.stdout = new PrintWriter(callbacks.getStdout(), true);
+        this.stderr = new PrintWriter(callbacks.getStderr(), true);
 
-	@Override
-	public byte[] processPayload(byte[] currentPayload, byte[] originalPayload, byte[] baseValue) {
-		String payload = new String(currentPayload);
-		String newPayload="";
-		try {
-			newPayload = Utils.sendPayload(payload);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this.getUiComponent(),e.getMessage()," 请检查以下异常信息", 1);
-		}  
-		return helpers.stringToBytes(newPayload);
-	}
+        callbacks.setExtensionName(extensionName + " " + version);
+        callbacks.registerContextMenuFactory(new Menu());
+        callbacks.registerIntruderPayloadProcessor(this);
 
- 
-	@Override
-	public String getTabCaption() {
-		return extensionName;
-	}
+        BurpExtender.this.gui = new GUI();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                BurpExtender.this.callbacks.addSuiteTab(BurpExtender.this);
+                stdout.println(Utils.getBanner());
+            }
+        });
+    }
 
-	@Override
-	public Component getUiComponent() {
-		return gui.getComponet();
-	}
-	
-	public static void main(String args[]) {
-		System.out.println("++hello++");
-	}
+    @Override
+    public String getProcessorName() {
+        return extensionName;
+    }
+
+    @Override
+    public byte[] processPayload(byte[] currentPayload, byte[] originalPayload, byte[] baseValue) {
+        String payload = new String(currentPayload, java.nio.charset.StandardCharsets.UTF_8);
+        String newPayload = "";
+        try {
+            newPayload = Utils.sendPayload(payload);
+        } catch (Exception e) {
+            stderr.println("[" + extensionName + "] processPayload error: " + e.getMessage());
+            return currentPayload; // 出错时返回原始payload，不阻断流程
+        }
+        return helpers.stringToBytes(newPayload);
+    }
+
+    @Override
+    public String getTabCaption() {
+        return extensionName;
+    }
+
+    @Override
+    public Component getUiComponent() {
+        return gui.getComponent();
+    }
 }

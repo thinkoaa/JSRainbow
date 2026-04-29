@@ -1,0 +1,5 @@
+bin/
+META-INF/
+fat_staging/
+*.class
+JSRainbow.jar
